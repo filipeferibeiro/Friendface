@@ -5,10 +5,12 @@
 //  Created by Filipe Fernandes on 14/07/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    @State private var users: [User] = []
+    @Environment(\.modelContext) var modelContext
+    @Query(sort: [SortDescriptor(\User.name)]) var users: [User]
     @State private var path: [User] = []
     
     var body: some View {
@@ -26,7 +28,7 @@ struct ContentView: View {
             }
             .navigationTitle("Friendface")
             .navigationDestination(for: User.self, destination: { user in
-                UserDetailView(user: user, users: $users)
+                UserDetailView(user: user)
             })
             .task {
                 await getUsers()
@@ -46,7 +48,9 @@ struct ContentView: View {
             decoder.dateDecodingStrategy = .iso8601
             
             if let decodedData = try? decoder.decode([User].self, from: data) {
-                users = decodedData
+                for user in decodedData {
+                    modelContext.insert(user)
+                }
             }
         } catch {
             print("Failed to load users.")
@@ -56,4 +60,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .modelContainer(for: User.self)
 }

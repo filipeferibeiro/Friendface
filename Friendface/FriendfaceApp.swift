@@ -13,5 +13,6 @@ struct FriendfaceApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: User.self)
     }
 }

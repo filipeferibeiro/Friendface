@@ -5,6 +5,7 @@
 //  Created by Filipe Fernandes on 14/07/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct UserInfo<Content: View>: View {
@@ -35,8 +36,8 @@ extension UserInfo where Content == Text {
 }
 
 struct UserDetailView: View {
-    var user: User
-    @Binding var users: [User]
+    @Query var users: [User]
+    @Bindable var user: User
     
     var body: some View {
         List {
@@ -116,8 +117,7 @@ struct UserDetailView: View {
                     Friend(id: UUID(), name: "My First Friend"),
                     Friend(id: UUID(), name: "My Second Friend")
                 ]
-            ),
-            users: .constant([])
+            )
         )
     }
 }
